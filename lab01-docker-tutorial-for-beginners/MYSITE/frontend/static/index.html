@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Metadata and page title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Todo List</title>
+</head>
+<body>
+    <!-- Page heading -->
+    <h1>Todo List</h1>
+
+    <!-- Input field for new todo item -->
+    <input type="text" id="newItem" placeholder="Enter a new item">
+
+    <!-- Button to add new item -->
+    <button onclick="addItem()">Add</button>
+
+    <!-- Unordered list to display todo items -->
+    <ul id="todoList"></ul>
+
+    <script>
+        // Base URL for API requests: update frontend to call backend by hardcoding url
+        const API_URL = 'http://localhost:8000';
+
+        // Fetch and list all todo items using GET endpoint
+        async function fetchTodos() {
+            const response = await fetch(`${API_URL}/todos`);
+            const todos = await response.json();
+            const list = document.getElementById('todoList');
+            list.innerHTML = ''; // Clear existing list
+
+            // Loop through todos and create list items 
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.textContent = todo.content;
+
+                // Create delete button for each item
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteItem(todo._id);
+
+                // Append delete button to list item
+                li.appendChild(deleteBtn);
+                list.appendChild(li);
+            });
+        }
+
+        // Add a new todo item using the POST endpoint
+        async function addItem() {
+            const input = document.getElementById('newItem');
+            if (input.value.trim() !== '') {
+                const response = await fetch(`${API_URL}/todos`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ content: input.value }),
+                });
+
+                // If successful, clear input and refresh list
+                if (response.ok) {
+                    input.value = '';
+                    fetchTodos();
+                }
+            }
+        }
+
+        // Delete a todo item by ID using DELETE endpoint
+        async function deleteItem(id) {
+            const response = await fetch(`${API_URL}/todos/${id}`, {
+                method: 'DELETE',
+            });
+
+            // If successful, refresh list
+            if (response.ok) {
+                fetchTodos();
+            }
+        }
+
+        // Initial fetch when page loads
+        fetchTodos();
+    </script>
+</body>
+</html>

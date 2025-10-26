@@ -1,0 +1,40 @@
+# To make code installable
+
+# -------------------- Build System Configuration --------------------
+[build-system]
+
+# Specify the build-time dependencies required to build the project
+requires = ["setuptools"]
+
+# Define the backend used to build the project (setuptools in this case)
+build-backend = "setuptools.build_meta"
+
+# -------------------- Project Metadata --------------------
+[project]
+
+# Name of the project/package
+name = "mysite"
+
+# Short description of the project
+description = "My awesome site"
+
+# Path to the README file used for long description (e.g. on PyPI)
+readme = "README.md"
+
+# Minimum required Python version to run the project
+requires-python = ">=3.11"
+
+# Current version of the project
+version = "0.0.1"
+
+# Runtime dependencies that will be installed when the package is installed
+dependencies = [
+  "fastapi",  # Web framework for building APIs
+  "motor",    # Async MongoDB driver to connect backend to database
+]
+
+# -------------------- Package Discovery --------------------
+[tool.setuptools.packages.find]
+
+# Tell setuptools to look for packages inside the 'src' directory
+where = ["src"]

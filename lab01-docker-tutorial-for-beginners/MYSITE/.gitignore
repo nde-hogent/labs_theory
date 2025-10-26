@@ -1,0 +1,3 @@
+# Secrets 
+# avoid accidentaly commit any .env files
+*.env
